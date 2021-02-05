@@ -1,0 +1,171 @@
+{
+	"manifest_version":		1,
+	"name":					"Embed",
+	"author":				[
+		"Alexander Mashin", "based on the work by Mithgol the Webmaster", "based on the work by Jim R. Wilson (EmbedVideo)"
+	],
+	"type":					"parserhook",
+	"version":				"0.4",
+	"description":			"Adds a parser function embedding video, audio and panoramas from popular sources.",
+	"url":					"https://traditio.wiki/Embed",
+	"requires": {
+		"MediaWiki": ">= 1.25.0",
+		"platform": {
+			"php": ">= 7.4"
+		}
+	},
+	"ExtensionMessagesFiles":		{
+		"Embed":		"Embed.i18n.php",
+		"Embed-magic":	"Embed.i18n.magic.php"
+	},
+	"AutoloadClasses":		{
+		"Embed":		"Embed.php"
+	},
+	"Hooks": {
+		"ParserFirstCallInit": "Embed::setup"
+	},
+	"config":	{
+		"_prefix":			"wgEmbed",
+		"MinWidth":			100,
+		"MaxWidth":			2048,
+		"MinHeight":		10,
+		"MaxHeight":		2048,
+		"ServiceList": {
+			"default": {
+				"regex_id"        : "%^[A-Za-z0-9_-]+$%",
+				"default_width"   : 425,
+				"default_height"  : 350,
+				"controls_height" : 0,
+				"code"			  : "<iframe style=\"margin-bottom: -5px;\" width=\"$2\" height=\"$3\" src=\"$1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>"
+			},
+			"youtube": {
+				"url"             : "//www.youtube.com/embed/$1?version=3&amp;fs=1&amp;modestbranding=1&amp;start=$4",
+				"default_width"   : 560,
+				"default_height"  : 315,
+				"controls_height" : 30
+			},
+			"youtubewide": {
+				"url"             : "//www.youtube.com/embed/$1?version=3&amp;fs=1&amp;modestbranding=1&amp;start=$4",
+				"default_width"   : 640,
+				"default_height"  : 390,
+				"controls_height" : 30
+			},
+			"rutube": {
+				"regex_id"       : "%^\\d+$%",
+				"url"            : "//rutube.ru/embed/$1?bmstart=$4",
+				"default_width"  : 720,
+				"default_height" : 405
+			},
+			"imeemtrack": {
+				"url"            : "//media.imeem.com/m/$1/aus=false/",
+				"default_width"  : 300,
+				"default_height" : 110
+			},
+			"imeemsequence": {
+				"url"            : "//media.imeem.com/pl/$1/aus=false/",
+				"default_width"  : 300,
+				"default_height" : 340
+			},
+			"imeemshuffle": {
+				"url"            : "//media.imeem.com/pl/$1/aus=false/autoShuffle=true/",
+				"default_width"  : 300,
+				"default_height" : 340
+			},
+			"box": {
+				"url"            : "//www.box.net/mp3player/player.swf?playlistURL=http://www.box.net/lite/playlist/$1",
+				"default_width"  : 310,
+				"default_height" : 65
+			},
+			"muzicons": {
+				"url"            : "//muzicons.com/musicon3.swf?&nomuz=muzicon%20unavailable&site=http://muzicons.com/&icon_pic=12.png&music_file=$1&bg_color=000000&type_of_clip=whith_bar&text_color=FFFFFF&text_message=listening",
+				"default_width"  : 150,
+				"default_height" : 50
+			},
+			"tradicons": {
+				"regex_id"       : "%^[01-9a-zA-Z]{1}/[01-9a-zA-Z]{2}/[01-9a-zA-Z_.-]+\\.[Mm][Pp]3$%",
+				"url"            : "//muzicons.com/musicon_v_srv_new.swf?&nomuz=muzicon%20unavailable&site=http://muzicons.com/&icon_pic=12.png&music_file=http://traditio.ru/images/$1&bg_color=000000&type_of_clip=whith_bar&text_color=FFFFFF",
+				"default_width"  : 150,
+				"default_height" : 50
+			},
+			"gigapan": {
+				"regex_id"       : "%^[0-9]+/tiles/(&width=[0-9]+&height=[0-9]+&nlevels=[0-9]+&cright=[0-9]+\\.0&cbottom=[0-9]+\\.0)?$%",
+				"url"            : "//gigapan.org/viewer/PanoramaViewer.swf?url=http://share.gigapan.org/gigapans0/$1&suffix=.jpg&cleft=0&ctop=0",
+				"default_width"  : 600,
+				"default_height" : 400
+			},
+			"videomailru": {
+				"regex_id"       : "%^[-\\d]{18}$%",
+				"url"            : "//my.mail.ru/video/embed/$1",
+				"default_width"  : 626,
+				"default_height" : 367,
+				"controls_height" : 60
+			},
+			"1tv": {
+				"regex_id"       : "%^\\d+$%",
+				"url"            : "//www.1tv.ru/embed/$1:11",
+				"default_width"  : 560,
+				"default_height" : 315
+			},
+			"vesti": {
+				"regex_id"       : "%^[01-9]+$%",
+				"url"            : "//player.vgtrk.com/iframe/video/id/$1/start_zoom/true/showZoomBtn/false/sid/vesti/mute/true/tid/2366/?acc_video_id=$4",
+				"default_width"  : 320,
+				"default_height" : 295
+			},
+			"blip": {
+				"regex_id"       : "/^[A-Za-z0-9_%\\-]+$/",
+				"url"            : "//blip.tv/play/$1",
+				"default_width"  : 480,
+				"default_height" : 390,
+				"controls_height" : 30
+			},
+			"slideshare": {
+				"regex_id"     : "/^[a-z01-9-]+&stripped_title=[a-z01-9-]+$/",
+				"url"            : "//static.slidesharecdn.com/swf/ssplayer2.swf?rel=0&doc=$1",
+				"default_width"  : 425,
+				"default_height" : 355,
+				"controls_height": 37
+			},
+			"divshareaudio": {
+				"regex_id"       : "/^[01-9a-z-]+$/",
+				"url"            : "//www.divshare.com/flash/playlist?myId=$1",
+				"default_width"  : 335,
+				"default_height" : 28
+			},
+			"vimeo": {
+				"regex_id"       : "/^[01-9]+$/",
+				"url"            : "//player.vimeo.com/video/$1",
+				"default_width"  : 640,
+				"default_height" : 360
+			},
+			"ustream": {
+				"regex_id"       : "/^[01-9a-f-]+$/",
+				"url"            : "//www.ustream.tv/embed/$1?v=3&wmode=direct&autoplay=false",
+				"default_width"  : 360,
+				"default_height" : 302,
+				"controls_height": 32,
+				"code"           : "<iframe width='$2' height='$3' src='$1' scrolling='no' frameborder='0' style='border: 0px none transparent;'></iframe>"
+			},
+			"vkontakte": {
+				"regex_id"       : "/^-?[01-9]+$/",
+				"url"            : "//vk.com/video_ext.php?oid=$1&id=$4&hash=$5",
+				"default_width"  : 640,
+				"default_height" : 360,
+				"code"			 : "<iframe src=\"$1\" width=\"$2\" height=\"$3\" frameborder=\"0\" allowfullscreen></iframe>"
+			},
+			"rpod": {
+				"regex_id"       : "/^\\d+$/",
+				"url"            : "//s.rpod.ru/swf/playa.swf?xmlURL=http%3A%2F%2Fs.rpod.ru%2Fxml%2Faudio_waveform%2Fa$1.xml",
+				"default_width"  : 300,
+				"default_height" : 110
+			},
+			"tiktok": {
+				"regex_id"       : "/^\\d+$/",
+				"url"            : "https://www.tiktok.com/@$5/video/$1",
+				"default_width"  : 336,
+				"default_height" : 600,
+				"code"			 : "{{#get_web_data:url = https://www.tiktok.com/oembed?url=$1 | format = json | use jsonpath | data = code=$.html}}{{#external_value:code}}"
+			}
+		}
+	}
+}
