@@ -2,7 +2,7 @@
 	"manifest_version":		1,
 	"name":					"Embed",
 	"author":				[
-		"Alexander Mashin", "based on the work by Mithgol the Webmaster", "based on the work by Jim R. Wilson (EmbedVideo)"
+		"Alexander Mashin", "based on a work by Mithgol the Webmaster", "based on a work by Jim R. Wilson (EmbedVideo)"
 	],
 	"type":					"parserhook",
 	"version":				"0.4",
@@ -36,19 +36,19 @@
 				"default_width"   : 425,
 				"default_height"  : 350,
 				"controls_height" : 0,
-				"code"			  : "<iframe style=\"margin-bottom: -5px;\" width=\"$2\" height=\"$3\" src=\"$1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>"
+				"code"			  : "<iframe width=\"$2\" height=\"$3\" src=\"$1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>"
 			},
 			"youtube": {
 				"url"             : "//www.youtube.com/embed/$1?version=3&amp;fs=1&amp;modestbranding=1&amp;start=$4",
 				"default_width"   : 560,
 				"default_height"  : 315,
-				"controls_height" : 30
+				"controls_height" : 25
 			},
 			"youtubewide": {
 				"url"             : "//www.youtube.com/embed/$1?version=3&amp;fs=1&amp;modestbranding=1&amp;start=$4",
 				"default_width"   : 640,
 				"default_height"  : 390,
-				"controls_height" : 30
+				"controls_height" : 25
 			},
 			"rutube": {
 				"regex_id"       : "%^\\d+$%",
@@ -165,6 +165,19 @@
 				"default_width"  : 336,
 				"default_height" : 600,
 				"code"			 : "{{#get_web_data:url = https://www.tiktok.com/oembed?url=$1 | format = json | use jsonpath | data = code=$.html}}{{#external_value:code}}"
+			},
+			"telegram": {
+				"regex_id"       : "/^\\w+\\/\\d+$/",
+				"url"            : "https://t.me/$1",
+				"default_width"  : 336,
+				"default_height" : 600,
+				"code"			 : "<script async src=\"https://telegram.org/js/telegram-widget.js?19\" data-telegram-post=\"$4\" data-width=\"100%\"></script>"
+			},
+			"zen.yandex": {
+				"regex_id"      : "/^\\w+$/",
+				"url"           : "//frontend.vh.yandex.ru/player/$1?from_block=partner&amp;from=zen&amp;mute=0&amp;autoplay=0&amp;tv=0",
+				"default_width" : 560,
+				"default_height": 315
 			}
 		}
 	}
