@@ -138,7 +138,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  * -----------------------------------------------------------------------
  */
- 
+
 // Confirm MW environment
 if ( defined( 'MEDIAWIKI' ) ) {
 
@@ -181,9 +181,7 @@ class Embed {
 	): string {
 		// Missing two first parametres:
 		if ( $service === null || $id === null ) {
-			return '<div class="errorbox">'
-				 . wfMessage( 'embed-missing-params' )->parse()
-				 . '</div>';
+			return '<div class="errorbox">' . wfMessage( 'embed-missing-params' )->parse() . '</div>';
 		}
 
 		$service = @htmlspecialchars( trim( $service ) );
@@ -198,9 +196,7 @@ class Embed {
 
 		// Checking if there is an URL message for the service:
 		if ( wfMessage( "embed-$service-url" )->isBlank() ) {
-			return '<div class="errorbox">'
-				. wfMessage( 'embed-unrecognized-service', $service )->parse()
-				. '</div>';
+			return '<div class="errorbox">' . wfMessage( 'embed-unrecognized-service', $service )->parse() . '</div>';
 		}
 
 		// Checking id:
@@ -250,12 +246,9 @@ class Embed {
 			$height = round( $width * $ratio ) + $controlsHeight;
 		}
 
-		$url = self::setting( $service, 'url', [$id, $width, $height, $param4, $param5] );
+		$url = self::setting( $service, 'url', [ $id, $width, $height ] );
 
-		return $parser->insertStripItem(
-			self::setting( $service, 'code', [$url, $width, $height] ),
-			$parser->mStripState
-		);
+		return $parser->insertStripItem( self::setting( $service, 'code', [ $url, $width, $height, $id ] ) );
 	}    // -- public static function parserFunction (...): bool
 
 	/**
