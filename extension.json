@@ -39,13 +39,13 @@
 				"code"			  : "<iframe width=\"$2\" height=\"$3\" src=\"$1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>"
 			},
 			"youtube": {
-				"url"             : "//www.youtube.com/embed/$1?version=3&amp;fs=1&amp;modestbranding=1&amp;start=$4",
+				"url"             : "//www.youtube.com/embed/$1?version=3&amp;fs=1&amp;modestbranding=1&amp;t=$4",
 				"default_width"   : 560,
 				"default_height"  : 315,
 				"controls_height" : 25
 			},
 			"youtubewide": {
-				"url"             : "//www.youtube.com/embed/$1?version=3&amp;fs=1&amp;modestbranding=1&amp;start=$4",
+				"url"             : "//www.youtube.com/embed/$1?version=3&amp;fs=1&amp;modestbranding=1&amp;t=$4",
 				"default_width"   : 640,
 				"default_height"  : 390,
 				"controls_height" : 25
