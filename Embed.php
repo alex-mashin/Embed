@@ -246,7 +246,7 @@ class Embed {
 			$height = round( $width * $ratio ) + $controlsHeight;
 		}
 
-		$url = self::setting( $service, 'url', [ $id, $width, $height ] );
+		$url = self::setting( $service, 'url', [ $id, $width, $height, $param4, $param5 ] );
 
 		return $parser->insertStripItem( self::setting( $service, 'code', [ $url, $width, $height, $id ] ) );
 	}    // -- public static function parserFunction (...): bool
