@@ -163,7 +163,7 @@ class Embed {
    	 * @param string $url Domain to add.
      	 */
 	private static function addCSP( string $url ) {
-		$chunks = reverse( explode( '.', parse_url( $url,  PHP_URL_HOST ) ) );
+		$chunks = array_reverse( explode( '.', parse_url( $url,  PHP_URL_HOST ) ) );
 		$domain2lvl = $chunks[1] . '.' . $chunks[0];
 		global $wgCSPHeader;
 		if ( is_array( $wgCSPHeader ) ) {
