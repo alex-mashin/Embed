@@ -159,6 +159,27 @@ class Embed {
 	}    // -- public static function setup (Parser &$parser): bool
 
 	/**
+ 	 * Add domain with its subdomains to CSP header. 
+   	 * @param string $url Domain to add.
+     	 */
+	private static function addCSP( string $url ) {
+		$chunks = reverse( explode( '.', parse_url( $url,  PHP_URL_HOST ) ) );
+		$domain2lvl = $chunks[1] . '.' . $chunks[0];
+		global $wgCSPHeader;
+		if ( is_array( $wgCSPHeader ) ) {
+			foreach ( [ 'script-src', 'default-src' ] as $src ) {
+				if ( is_array( $wgCSPHeader[$src] ) ) {
+					foreach ( [ $domain2lvl, '*.' . $domain2lvl ] as $domain ) {
+						if ( !in_array( $domain, $wgCSPHeader[$src], true ) ) {
+							$wgCSPHeader[$src][] = $domain;
+						}
+					}
+				}
+			} // -- foreach ( [ 'script-src', 'default-src' ] as $src )
+		} // -- if ( is_array( $wgCSPHeader ) )
+	} // -- private static function addCSP( string $ )
+
+	/**
 	 * Embeds video of the chosen service
 	 *
 	 * @param Parser $parser Instance of running Parser.
@@ -247,6 +268,9 @@ class Embed {
 		}
 
 		$url = self::setting( $service, 'url', [ $id, $width, $height, $param4, $param5 ] );
+
+		// Add to CSP Header:
+		self::addCSP( $url );
 
 		return $parser->insertStripItem( self::setting( $service, 'code', [ $url, $width, $height, $id ] ) );
 	}    // -- public static function parserFunction (...): bool
