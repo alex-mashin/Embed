@@ -13,6 +13,8 @@
  *     MediaWiki 1.6.x, 1.9.x, 1.10.x or higher
  *     PHP 4.x, 5.x or higher.
  * Version Notes:
+ *     version 0.4:
+ *         CSP header is enabled.
  *     version 0.3:
  *         HTTPS enabled.
  *     version 0.2.2:
@@ -159,24 +161,30 @@ class Embed {
 	}    // -- public static function setup (Parser &$parser): bool
 
 	/**
- 	 * Add domain with its subdomains to CSP header. 
-   	 * @param string $url Domain to add.
+ 	 * Add domains with their subdomains to CSP header. 
+   	 * @param array $domains Domains to add.
      	 */
-	private static function addCSP( string $url ) {
-		$chunks = array_reverse( explode( '.', parse_url( $url,  PHP_URL_HOST ) ) );
-		$domain2lvl = $chunks[1] . '.' . $chunks[0];
+	private static function addCSP( array $domains ) {
 		global $wgCSPHeader;
-		if ( is_array( $wgCSPHeader ) ) {
-			foreach ( [ 'script-src', 'default-src' ] as $src ) {
-				if ( is_array( $wgCSPHeader[$src] ) ) {
-					foreach ( [ $domain2lvl, '*.' . $domain2lvl ] as $domain ) {
-						if ( !in_array( $domain, $wgCSPHeader[$src], true ) ) {
-							$wgCSPHeader[$src][] = $domain;
-						}
+		if ( $wgCSPHeader === false ) {
+			return;
+		}
+		if ( $wgCSPHeader === true ) {
+			$wgCSPHeader = [];
+		}
+		foreach ( [ 'frame-src', 'script-src', 'default-src' ] as $src ) {
+			if ( !is_array( $wgCSPHeader[$src] ) ) {
+				$wgCSPHeader[$src] = [];
+			}
+			foreach ( $domains as $domain ) {
+				$domain = trim( $domain );
+				foreach ( [ $domain, '*.' . $domain ] as $domain2add ) {
+					if ( !in_array( $domain2add, $wgCSPHeader[$src], true ) ) {
+						$wgCSPHeader[$src][] = $domain2add;
 					}
 				}
-			} // -- foreach ( [ 'script-src', 'default-src' ] as $src )
-		} // -- if ( is_array( $wgCSPHeader ) )
+			} // -- foreach ( $domains as $domain )
+		} // -- foreach ( [ 'frame-src', 'script-src', 'default-src' ] as $src )
 	} // -- private static function addCSP( string $ )
 
 	/**
@@ -269,14 +277,12 @@ class Embed {
 
 		$url = self::setting( $service, 'url', [ $id, $width, $height, $param4, $param5 ] );
 
-		// Add to CSP Header:
-		self::addCSP( $url );
-
+		// Add 2nd-level domain to CSP Header:
+		$chunks = array_reverse( explode( '.', parse_url( $url,  PHP_URL_HOST ) ) );
+		$csp_domains = [ $chunks[1] . '.' . $chunks[0] ];
 		// Additional domains:
-		$additional = explode ( ',', self::setting( $service, 'csp' ) );
-		foreach ( $additional as $domain ) {
-			self::addCSP( trim( $domain ) );
-		}
+		$csp_domains += explode ( ',', self::setting( $service, 'csp' ) );
+		self::addCSP( $csp_domains );
 
 		return $parser->insertStripItem( self::setting( $service, 'code', [ $url, $width, $height, $id ] ) );
 	}    // -- public static function parserFunction (...): bool
