@@ -272,18 +272,24 @@ class Embed {
 		// Add to CSP Header:
 		self::addCSP( $url );
 
+		// Additional domains:
+		$additional = explode ( ',', self::setting( $service, 'csp' ) );
+		foreach ( $additional as $domain ) {
+			self::addCSP( trim( $domain ) );
+		}
+
 		return $parser->insertStripItem( self::setting( $service, 'code', [ $url, $width, $height, $id ] ) );
 	}    // -- public static function parserFunction (...): bool
 
 	/**
 	 * Returns the value of a setting
 	 *
-	 * @param string $service Form which service to return a setting.
+	 * @param string $service For which service to return a setting.
 	 * @param string $setting Which setting to return.
-	 * @param array $params Parametres fpr the MediaWiki messsage.
+	 * @param ?array $params Parametres for the MediaWiki messsage.
 	 * @return string            The setting value
 	 */
-	private static function setting( string $service, string $setting, array $params = [] ): string {
+	private static function setting( string $service, string $setting, ?array $params = [] ): string {
 		// First, try to find setting for the service:
 		$msg = wfMessage( "embed-$service-$setting", $params );
 		// Then try to find a default value:
