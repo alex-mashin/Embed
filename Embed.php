@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * Embed.php - Adds a parser function embedding video and audio from popular sources.
  * @author Mithgol the Webmaster, based on the work by Jim R. Wilson (EmbedVideo) and contributions of Alex Mashin
@@ -140,9 +141,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  * -----------------------------------------------------------------------
  */
+use MediaWiki\MediaWikiServices;
 
 // Confirm MW environment
-if ( defined( 'MEDIAWIKI' ) ) {
+if ( !defined( 'MEDIAWIKI' ) ) die();
 
 /**
  * Wrapper class for encapsulating Embed related parser methods
@@ -155,6 +157,32 @@ class Embed {
 	 * @return bool
 	 */
 	public static function setup( Parser &$parser ): bool {
+		// Add all domains to CSP header:
+		$csp_domains = [];
+		$csp_explicit =  wfMessage( 'embed-csp' );
+		if ( !$csp_explicit->isBlank() ) {
+			$csp_domains = explode( ',', $csp_explicit->text() );
+		} else {
+			$message_cache = MediaWikiServices::getInstance()->getMessageCache();
+			global $wgLanguageCode;
+			$prefix = 'embed-';
+			$prefix_length = strlen( $prefix );
+			$suffix = '-url';
+			$suffix_length = -strlen( $suffix );
+			foreach ( $message_cache->getAllMessageKeys( $wgLanguageCode ) as $key ) {
+				if ( substr( $key, 0, $prefix_length ) === $prefix && substr( $key, $suffix_length ) === $suffix ) {
+					$url = wfMessage( $key, [] )->text();
+					// Add 2nd-level domain to CSP Header:
+					$chunks = array_reverse( explode( '.', parse_url( $url,  PHP_URL_HOST ) ) );
+					$csp_domains[] = $chunks[1] . '.' . $chunks[0];
+					// Additional domains:
+					$service = substr( $key, $prefix_length, $suffix_length );
+					$csp_domains += explode ( ',', self::setting( $service, 'csp' ) );
+				}
+			}
+		} // -- if ( !$csp_explicit->isBlank() )
+		self::addCSP( $csp_domains );
+
 		// Setup parser hook:
 		$parser->setFunctionHook( 'embed', [ self::class, 'parserFunction' ] );
 		return true;
@@ -277,13 +305,6 @@ class Embed {
 
 		$url = self::setting( $service, 'url', [ $id, $width, $height, $param4, $param5 ] );
 
-		// Add 2nd-level domain to CSP Header:
-		$chunks = array_reverse( explode( '.', parse_url( $url,  PHP_URL_HOST ) ) );
-		$csp_domains = [ $chunks[1] . '.' . $chunks[0] ];
-		// Additional domains:
-		$csp_domains += explode ( ',', self::setting( $service, 'csp' ) );
-		self::addCSP( $csp_domains );
-
 		return $parser->insertStripItem( self::setting( $service, 'code', [ $url, $width, $height, $id ] ) );
 	}    // -- public static function parserFunction (...): bool
 
@@ -324,5 +345,3 @@ class Embed {
 		return $value && preg_match( $regex, $value );
 	}   // -- private static function check( string $service, string $name, string $value ): bool
 }
-} // End MW Environment wrapper
-?>
