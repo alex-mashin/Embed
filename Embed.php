@@ -169,7 +169,7 @@ class Embed {
 			$prefix_length = strlen( $prefix );
 			$suffix = '-url';
 			$suffix_length = -strlen( $suffix );
-			foreach ( $message_cache->getSubitemList( 'en', 'messages' ) ) as $key ) {
+			foreach ( $message_cache->getSubitemList( 'en', 'messages' ) as $key ) {
 				if ( substr( $key, 0, $prefix_length ) === $prefix && substr( $key, $suffix_length ) === $suffix ) {
 					$url = wfMessage( $key, [] )->text();
 					// Add 2nd-level domain to CSP Header:
