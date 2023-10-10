@@ -52,7 +52,7 @@
 			},
 			"rutube": {
 				"regex_id"       : "%^\\d+$%",
-				"url"            : "//rutube.ru/embed/$1?bmstart=$4",
+				"url"            : "//rutube.ru/play/embed/$1?bmstart=$4",
 				"default_width"  : 720,
 				"default_height" : 405
 			},
