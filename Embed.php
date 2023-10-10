@@ -163,25 +163,22 @@ class Embed {
 		if ( !$csp_explicit->isBlank() ) {
 			$csp_domains = explode( ',', $csp_explicit->text() );
 		} else {
-			$message_cache = MediaWikiServices::getInstance()->getMessageCache();
-			global $wgLanguageCode;
 			$prefix = 'embed-';
 			$prefix_length = strlen( $prefix );
 			$suffix = '-url';
 			$suffix_length = -strlen( $suffix );
-			foreach ( [ $wgLanguageCode, 'en' ] as $lang ) {
-				foreach ( $message_cache->getAllMessageKeys( $lang ) as $key ) {
-					if ( substr( $key, 0, $prefix_length ) === $prefix && substr( $key, $suffix_length ) === $suffix ) {
-						$url = wfMessage( $key, [] )->text();
-						// Add 2nd-level domain to CSP Header:
-						$chunks = array_reverse( explode( '.', parse_url( $url,  PHP_URL_HOST ) ) );
-						$csp_domains[] = $chunks[1] . '.' . $chunks[0];
-						// Additional domains:
-						$service = substr( $key, $prefix_length, $suffix_length );
-						$csp_domains += explode ( ',', self::setting( $service, 'csp' ) );
-					} // -- if ( substr( $key, 0, $prefix_length ) === $prefix && substr( $key, $suffix_length ) === $suffix )
-				} // -- foreach ( $message_cache->getAllMessageKeys( $lang ) as $key )
-			} // -- foreach ( [ $wgLanguageCode, 'en' ] as $lang )
+			foreach  (MediaWikiServices::getInstance()->getLocalisationCache()->getSubitemList( 'en', 'messages' ) as $key ) {
+				$key = strtolower( $key );
+				if ( substr( $key, 0, $prefix_length ) === $prefix && substr( $key, $suffix_length ) === $suffix ) {
+					$url = wfMessage( $key, [] )->text();
+					// Add 2nd-level domain to CSP Header:
+					$chunks = array_reverse( explode( '.', parse_url( $url,  PHP_URL_HOST ) ) );
+					$csp_domains[] = $chunks[1] . '.' . $chunks[0];
+					// Additional domains:
+					$service = substr( $key, $prefix_length, $suffix_length );
+					$csp_domains += explode ( ',', self::setting( $service, 'csp' ) );
+				} // -- if ( substr( $key, 0, $prefix_length ) === $prefix && substr( $key, $suffix_length ) === $suffix )
+			} // -- foreach ( $message_cache->getAllMessageKeys( $lang ) as $key )
 		} // -- if ( !$csp_explicit->isBlank() )
 		self::addCSP( $csp_domains );
 
