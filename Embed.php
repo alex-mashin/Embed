@@ -159,7 +159,7 @@ class Embed {
 	public static function setup( Parser &$parser ): bool {
 		// Add all domains to CSP header:
 		$csp_domains = [];
-		$csp_explicit =  wfMessage( 'embed-csp' )->text();
+		$csp_explicit =  wfMessage( 'embed-csp', [], 'en' )->plain();
 		if ( $csp_explicit ) {
 			$csp_domains = explode( ',', $csp_explicit );
 		} else {
