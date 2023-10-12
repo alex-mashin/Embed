@@ -159,7 +159,7 @@ class Embed {
 	public static function setup( Parser &$parser ): bool {
 		// Add all domains to CSP header:
 		$csp_domains = [];
-		$csp_explicit =  wfMessage( 'embed-csp', [], 'en' )->plain();
+		$csp_explicit =  $parser->msg( 'embed-csp' )->plain();
 		if ( $csp_explicit ) {
 			$csp_domains = explode( ',', $csp_explicit );
 		} else {
@@ -167,7 +167,7 @@ class Embed {
 			$prefix_length = strlen( $prefix );
 			$suffix = '-url';
 			$suffix_length = -strlen( $suffix );
-			foreach  (MediaWikiServices::getInstance()->getLocalisationCache()->getSubitemList( 'en', 'messages' ) as $key ) {
+			foreach ( MediaWikiServices::getInstance()->getLocalisationCache()->getSubitemList( 'en', 'messages' ) as $key ) {
 				$key = strtolower( $key );
 				if ( substr( $key, 0, $prefix_length ) === $prefix && substr( $key, $suffix_length ) === $suffix ) {
 					$url = wfMessage( $key, [] )->text();
@@ -178,8 +178,8 @@ class Embed {
 					$service = substr( $key, $prefix_length, $suffix_length );
 					$csp_domains += explode ( ',', self::setting( $service, 'csp' ) );
 				} // -- if ( substr( $key, 0, $prefix_length ) === $prefix && substr( $key, $suffix_length ) === $suffix )
-			} // -- foreach ( $message_cache->getAllMessageKeys( $lang ) as $key )
-		} // -- if ( !$csp_explicit->isBlank() )
+			} // -- foreach ( MediaWikiServices::getInstance()->getLocalisationCache()->getSubitemList( 'en', 'messages' ) as $key )
+		} // -- if ( $csp_explicit )
 		self::addCSP( $csp_domains );
 
 		// Setup parser hook:
