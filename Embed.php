@@ -200,7 +200,7 @@ class Embed {
 			$wgCSPHeader = [];
 		}
 		foreach ( [ 'frame-src', 'script-src', 'default-src' ] as $src ) {
-			if ( !is_array( $wgCSPHeader[$src] ) ) {
+			if ( !is_array( $wgCSPHeader[$src] ?? null ) ) {
 				$wgCSPHeader[$src] = [];
 			}
 			foreach ( $domains as $domain ) {
