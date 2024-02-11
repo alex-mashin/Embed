@@ -170,7 +170,7 @@ class Embed {
 			foreach ( MediaWikiServices::getInstance()->getLocalisationCache()->getSubitemList( 'en', 'messages' ) as $key ) {
 				$key = strtolower( $key );
 				if ( substr( $key, 0, $prefix_length ) === $prefix && substr( $key, $suffix_length ) === $suffix ) {
-					$url = wfMessage( $key, [] )->text();
+					$url = wfMessage( $key, [] )->inLanguage( 'en' )->text();
 					// Add 2nd-level domain to CSP Header:
 					$chunks = array_reverse( explode( '.', parse_url( $url,  PHP_URL_HOST ) ) );
 					$csp_domains[] = $chunks[1] . '.' . $chunks[0];
@@ -317,9 +317,9 @@ class Embed {
 	 */
 	private static function setting( string $service, string $setting, ?array $params = [] ): string {
 		// First, try to find setting for the service:
-		$msg = wfMessage( "embed-$service-$setting", $params );
+		$msg = wfMessage( "embed-$service-$setting", $params )->inLanguage( 'en' );
 		// Then try to find a default value:
-		$msg = $msg->isBlank() ? wfMessage( "embed-default-$setting", $params ) : $msg;
+		$msg = $msg->isBlank() ? wfMessage( "embed-default-$setting", $params )->inLanguage( 'en' ) : $msg;
 		// Do not escape regexes:
 		return $setting === 'id_regex' ? $msg->plain() : $msg->text();
 	}    // -- private static function setting (string $service, string $setting, array $params = []): string
