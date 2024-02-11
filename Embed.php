@@ -159,9 +159,9 @@ class Embed {
 	public static function setup( Parser &$parser ): bool {
 		// Add all domains to CSP header:
 		$csp_domains = [];
-		$csp_explicit = wfMessage( 'embed-csp' )->inLanguage( 'en' )->plain();
-		if ( $csp_explicit ) {
-			$csp_domains = explode( ',', $csp_explicit );
+		$csp_msg = wfMessage( 'embed-csp' )->inLanguage( 'en' );
+		if ( $csp_msg->exists() ) {
+			$csp_domains = explode( ',', $csp_msg->plain() );
 		} else {
 			$prefix = 'embed-';
 			$prefix_length = strlen( $prefix );
@@ -179,7 +179,7 @@ class Embed {
 					$csp_domains += explode ( ',', self::setting( $service, 'csp' ) );
 				} // -- if ( substr( $key, 0, $prefix_length ) === $prefix && substr( $key, $suffix_length ) === $suffix )
 			} // -- foreach ( MediaWikiServices::getInstance()->getLocalisationCache()->getSubitemList( 'en', 'messages' ) as $key )
-		} // -- if ( $csp_explicit )
+		} // -- if ( $csp_msg->exists() )
 		self::addCSP( $csp_domains );
 
 		// Setup parser hook:
@@ -188,7 +188,7 @@ class Embed {
 	}    // -- public static function setup (Parser &$parser): bool
 
 	/**
- 	 * Add domains with their subdomains to CSP header. 
+ 	 * Add domains with their subdomains to CSP header.
    	 * @param array $domains Domains to add.
      	 */
 	private static function addCSP( array $domains ) {
