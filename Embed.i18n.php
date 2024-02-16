@@ -18,13 +18,13 @@ $messages ['en'] = array_merge ($service_messages, [
   , 'embed-illegal-width'           => 'Embed received the illegal width parameter "$1".'
   , 'embed-illegal-height'          => 'Embed received the illegal height parameter "$1".'
 ]);
- 
+
 $messages ['ru'] = array_merge ($service_messages, [
     'embed-missing-params'          => 'Embed не нашло необходимого параметра.'
   , 'embed-bad-params'              => 'Embed получило неверный параметр.'
   , 'embed-unparsable-param-string' => 'Embed не может разобрать параметр. "<code>$1</code>".'
   , 'embed-unrecognized-service'    => 'Embed не знает указанной видеослужбы. "<code>$1</code>".'
-  , 'embed-bad-param'               => 'Embed получило неверный параметр $1 «$2» для службы «$2».'
+  , 'embed-bad-param'               => 'Embed получило неверный параметр $1 «$2» для службы «$3».'
   , 'embed-illegal-width'           => 'Embed получило неверную ширину "$1".'
   , 'embed-illegal-height'          => 'Embed получило неверную высоту "$1".'
 ]);

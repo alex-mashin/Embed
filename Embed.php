@@ -259,7 +259,7 @@ class Embed {
 		$id = trim( $id );
 		if ( !self::check( $service, 'id', $id ) ) {
 			return '<div class="errorbox">'
-				 . wfMessage( 'embed-bad-id', 'id', @htmlspecialchars( $id ), $service )->parse()
+				 . wfMessage( 'embed-bad-param', 'id', @htmlspecialchars( $id ), $service )->parse()
 				 . '</div>';
 		}
 
