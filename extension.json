@@ -51,7 +51,7 @@
 				"controls_height" : 25
 			},
 			"rutube": {
-				"regex_id"       : "%^\\d+$%",
+				"regex_id"       : "%^[0-9a-f]{32}$%",
 				"url"            : "//rutube.ru/play/embed/$1?bmstart=$4",
 				"default_width"  : 720,
 				"default_height" : 405
