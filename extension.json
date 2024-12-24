@@ -160,7 +160,8 @@
 				"url"            : "https://t.me/$1",
 				"default_width"  : 336,
 				"default_height" : 600,
-				"code"			 : "<script async src=\"https://telegram.org/js/telegram-widget.js?22\" data-telegram-post=\"$4\" data-width=\"100%\"></script>"
+				"code"			 : "<script async src=\"https://telegram.org/js/telegram-widget.js?22\" data-telegram-post=\"$4\" data-width=\"100%\"></script>",
+				"csp"            : "telegram.org"
 			},
 			"zen.yandex": {
 				"regex_id"      : "/^\\w+$/",
