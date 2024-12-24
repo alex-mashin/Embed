@@ -170,13 +170,14 @@ class Embed {
 			foreach ( MediaWikiServices::getInstance()->getLocalisationCache()->getSubitemList( 'en', 'messages' ) as $key ) {
 				$key = strtolower( $key );
 				if ( substr( $key, 0, $prefix_length ) === $prefix && substr( $key, $suffix_length ) === $suffix ) {
+					$service = substr( $key, $prefix_length, $suffix_length );
+					$url = self::setting( $service, 'url' );
 					$url = wfMessage( $key, [] )->inLanguage( 'en' )->text();
 					// Add 2nd-level domain to CSP Header:
-					$chunks = array_reverse( explode( '.', parse_url( $url,  PHP_URL_HOST ) ) );
+					$chunks = array_reverse( explode( '.', parse_url( $url, PHP_URL_HOST ) ) );
 					$csp_domains[] = $chunks[1] . '.' . $chunks[0];
 					// Additional domains:
-					$service = substr( $key, $prefix_length, $suffix_length );
-					$csp_domains += explode ( ',', self::setting( $service, 'csp' ) );
+					$csp_domains = array_merge( explode ( ',', self::setting( $service, 'csp' ) ) );
 				} // -- if ( substr( $key, 0, $prefix_length ) === $prefix && substr( $key, $suffix_length ) === $suffix )
 			} // -- foreach ( MediaWikiServices::getInstance()->getLocalisationCache()->getSubitemList( 'en', 'messages' ) as $key )
 		} // -- if ( $csp_msg->exists() )
@@ -203,7 +204,7 @@ class Embed {
 			if ( !is_array( $wgCSPHeader[$src] ?? null ) ) {
 				$wgCSPHeader[$src] = [];
 			}
-			foreach ( $domains as $domain ) {
+			foreach ( array_unique( $domains ) as $domain ) {
 				$domain = trim( $domain );
 				foreach ( [ $domain, '*.' . $domain ] as $domain2add ) {
 					if ( !in_array( $domain2add, $wgCSPHeader[$src], true ) ) {
